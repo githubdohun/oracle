@@ -1,0 +1,362 @@
+SQL Developer > Oracle 전용 (MySQL 지원)
+
+DBeaver > 모든 데이터베이스 범용
+
+Auto-commit
+- 개발자가 commit 실행하지 않더라도, insert/update/delete실행할때마다 자동으로 커밋을 호출하는 기능
+- 클라이언트 툴마다 설정이 다르다.
+- SQL Developer > Auto-commit(false)
+- DBeaver > Auto-commit(true)
+
+- 일단 끈다.
+
+
+ex02_datatybe.sql
+
+ANSI-SQL 자료형
+- 오라클 자료형
+
+
+1. 숫자형
+    - 정수, 실수
+    a. number
+        - (유효자리)38자리 이하의 숫자를 표현하는 자료형
+        - 1234567890 1234567890 1234567890 12345678
+        - 5~22byte
+        - 1X10^-130 ~ 9.9999X10^125
+        
+        - number: 정수 & 실수
+        - number(precision): 전체 자릿수, 정수
+        - number(precision, scale): 전체 자릿수, 소수 이하 자릿수, 실수
+
+        
+        
+        
+    
+2. 문자형
+    - 문자, 문자열
+    - char vs nchar > n의 의미?
+    - char vs varchar > var의 의미?
+    
+    a. char
+        - 고정 자릿수 문자열 > 공간(컬럼)의 크기가 불변
+        - char(n): 최대 n자리 문자열, n(바이트)
+        - 최소 크기: 1바이트
+        - 최대 크기: 2000바이트
+        
+        
+    b. nchar
+    
+    
+    
+    
+    c. varchar2 > variable
+        - 가변 자릿수 문자열 > 공간(컬럼)의 크기가 가변
+        - varchar2(n): 최대 n자리 문자열, n(바이트)
+        - varchar2(n char)
+    
+    
+    
+    
+    d.nvarchar2
+    
+
+    
+3. 날짜/시간형
+
+4. 이진 데이터형
+
+테이블 선언 (생성)
+create table 테이블명 (
+    컬럼 선언,
+    컬럼 선언,
+    컬럼 선언,  
+    컬럼 선언,
+    컬럼명 자료형
+
+)
+-- 테이블 생성
+create table tblTybe (
+    --num number
+    --num number(3) -- -999 ~ 999
+    --num number(4,2) -- -99.99 ~ 99,99
+    
+    --txt char(10) --최대 10바이트까지의 문자열
+    --txt char(10 char) -- 최대 10글자까지의 문자열
+    
+    --txt VARCHAR2(10)
+    
+    txt1 char(10),
+    txt2 varchar(10)
+);
+
+
+-- 데이터 추가
+-- insert into 테이블 (컬럼) values (값);
+
+-- 테이블 삭제
+drop table tblTybe;
+
+	관계형 데이터베이스
+	- 변수(X) > SQL은 프로그래밍 언어가 아니다.
+	- SQL > 대화형 언어 > DB와  대화를 목적으로 하는 언어
+	- 자료형 > 데이터 저장하는 규칙 > 테이블 정의할 때 사용 > 컬럼의 자료형
+
+
+ex08_aggregation_function.sql
+ 
+ 함수, Function 
+ 1. 내장형 함수 (Built - in Function)
+ 2. 사용자 정의 함수 (User Function) > ANSI-SQL(X), PL/SQL(O)
+ 
+ 
+ 집계 함수, Aggregation Function(*****************)
+ - 아주 쉬움 > 뒤에 나오는 수업과 결합 > 꽤 어려움;;;
+ 1. count()
+ 2. sum()
+ 3. avg()
+ 4. max()
+ 5. min()
+ 
+ 
+ 1. count()
+ - 결과 테이블의 레코드 수를 반환한다.
+ - number count(컬럼명)
+ - null값은 카운트에서 제외된다.(*****)
+ 
+2. sum()
+	- 해당 컬럼의 합을 구한다.
+	- number sum(컬럼명)
+	- 해당 컬럼 > 숫자형
+
+3. avg()
+ - 해당 컬럼의 평균값을 구한다.
+ - number avg(컬럼명)
+ - 숫자형만 적용 가능
+
+4. max()
+ 	- object max(컬럼명)
+ 	- 최대값 반환
+ 	
+ 5. min()
+ 	- object min(컬럼명)
+ 	- 최소값 반환
+ 	
+ 	-  숫자형, 문자형, 날짜형 모두 적용 가능
+ 	
+-- 집계  함수 사용 주의점!!
+-- 1. not a single-group group function
+-- 컬럼 리스트에서는 집계 함수와 일반 컬럼을 동시에 사용할 수 없다.
+
+--2. ORA-00934: group function is not allowed here
+--where절에는 집계 함수를 사용할 수 없다.
+--집계 함수(집합), 컬럼(개인)
+--where절 > 개개인(레코드)의 데이터를 접근해서 조건 검색 > 집합값 호출 불가능  
+
+
+
+
+
+
+
+
+
+
+
+ex09_numerical_function.sql
+
+ 
+ 숫자 함수 (= 수학 함수)
+ - Math.xxxx()
+ 
+ round()
+ - 반올림 함수
+ - number round(컬럼명):  정수 반환
+ - number round(컬럼명, 소수이하 자릿수): 실수 반환
+ 
+ 
+ floor(), trunc()
+ - 절삭 함수
+ - 무조건 내림 함수
+ - number foor(컬럼명): 무조건 정수 반환
+ - number trunc(컬럼명): 정수 반환
+ - number trunc(컬럼명, 소수이하 자릿수): 실수 반환
+ 
+ ceil()
+  - 무조건 올림 함수
+  - 천장
+  - number ceil(컬럼명)
+  
+ mod()
+	- 나머지 함수
+	- number mod((피제수, 제수)
+	
+	
+	
+	
+	
+	
+	ex10_string_function.sql
+
+	문자열 함수
+ 
+ 	대소문자 변환
+ 		- upper(), lower(), initcap()
+ 		- varchar2 upper(컬럼)
+ 		- varchar2 lower(컬럼)
+ 		- varchar2 initcap(컬럼)
+ 
+ 	문자열 추출 함수
+ 		- substr() > substring()
+ 		- varchar2 substr(컬럼, 시작위치, 가져울 문자 개수)
+ 		- varchar2 substr(컬럼, 시작위치)
+ 
+ 	문자열 길이
+ 		- length()
+ 		- number length(컬럼)
+ 
+ 	문자열 검색(indexOf)
+ 		- instr()
+ 		- 검색어의 위치 반환
+ 		- number instr(컬럼, 검색어)
+ 		- number instr(컬럼, 검색어, 시작 위치)
+ 		- number instr(컬럼, 검색어, 시작 위치, -1) //lastIndexOf
+ 		- 못 찾으면 0을 반환
+ 		
+	패딩
+ 		- lpad(), rpad()
+ 		- left padding, right padding
+ 		- varchar2 lpad(컬럼, 개수, 문자)
+ 		- varchar2 rpad(컬럼, 개수, 문자)
+ 		
+ 	공백 제거
+ 		- trim(), ltrim(), rtrim()
+ 		- varchar2 trim(컬럼)
+ 		- varchar2 ltrim(컬럼)
+ 		- varchar2 rtrim(컬럼)
+ 		
+ 	문자열 치환
+ 		- replace()
+ 		- varchar2 replace(컬럼, 찾을 문자열, 바꿀 문자열)
+ 	
+		-regexp_replace()
+	
+	문자열 치환
+ 	- decode()
+ 	- replace()와 유사
+ 	- varchar2 decode(컬럼, 찾을 문자열, 바꿀 문자열,[찾을 문자열, 바꿀 문자열] X N)
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	ex11_casting_function
+ 	
+ 	형변환 함수
+ 	- (int) num
+ 
+ 	1. to_char(숫자) 	: 숫자 > 문자
+ 	2. to_char(날짜) 	: 날짜 > 문자 ***
+ 	3. to_number(문자)	: 문자 > 숫자
+ 	4. to_date(문자) 	: 문자 > 날짜 ***
+ 	
+ 	
+ 	
+ 	1. to_char(숫자 [, 형식문자열])
+ 
+ 	형식 문자열 구성요소
+ 	a. 9: 숫자 1개를 문자 1개로 바꾸는 역할. 빈자리를 스페이스로 치환 	> %5d
+ 	b. 0: 숫자 1개를 문자 1개로 바꾸는 역할. 빈자리를 0으로 치환		> %05d
+ 	c. $: 통화 기호 표현
+ 	d. L: 통화 기호 포현(Locale)
+ 	e. .: 소숫점
+ 	f. ,: 천단위 표기
+ 	
+ 	
+ 	2. to_char(날짜)
+ 	- 날짜 > 문자
+	 - char to_char(컬럼, 형식문자열)
+ 
+ 	형식문자열 구성요소
+ 	a. yyyy
+ 	b. yy
+ 	c. month
+ 	d. mon
+ 	e. mm
+ 	f. day
+ 	g. dy
+ 	h. ddd
+ 	i. dd
+ 	j. d
+ 	k. hh
+ 	l. hh24
+ 	m. mi
+ 	n. ss
+ 	0. am(pm)
+ 	
+ 	SQL에는 날짜 상수(리터럴)이 없다.
+ 	
+ 	
+ 	3. to_number(문자)
+ 	
+ 	
+ 	4. date to_date(문자. 형식문자열)
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	ex12_datetime_function.sql
+ 	
+ 	날짜 시간 함수
+  
+    sysdate
+    - 현재 시스템의 시각을 반환
+    - Calendar.getInstance()
+    - date sysdate  
+    
+    
+    날짜 연산
+     1. 시각 - 시각 = 시간
+     2. 시각 + 시각 = 시각
+     3. 시각 - 시간 = 시각
+     
+     --오라클 > 식별자 최대 길이 > 30바이트9(UTF-8)
+     
+	시각 - 시각 = 시간(일) > 일 > 시 > 분 > 초 환산 가능
+                  > 일 > 월 > 년 환산 불가능
+                  
+	시각 + 시간(일) = 시각 > 일, 시, 분, 초 가능
+                  > 월, 년 불가능
+                  
+    month_between()
+    - number months_between(date, date)
+    - 시각 - 시각 = 시간(월)
+    
+    
+    add_months()
+     - date add_months(date, 시간)
+     - 시각 + 시간(월) = 시각 
+     
+     
+	시각 - 시각
+	1. 일, 시, 분, 초 > 연산자(-)
+	2. 월, 년 > months_between()
+	
+	
+	시각 +- 시간
+	1. 일, 시, 분, 초 > 연산자(+,-)
+	2. 월, 년 > add_months()
+ 	
