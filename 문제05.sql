@@ -7,7 +7,9 @@
 -- employees
 -- 1. 전체 이름(first_name + last_name)이 가장 긴 -> 짧은 사람 순으로 정렬해서 가져오기
 --    > 컬럼 리스트 > fullname(first_name + last_name), length(fullname)
-
+SELECT
+	first_name || last_name AS fullname
+FROM employees ORDER BY LENGTH(fullname) desc;
 -- 2. 전체 이름(first_name + last_name)이 가장 긴 사람은 몇글자? 가장 짧은 사람은 몇글자? 평균 몇글자?
 --    > 컬럼 리스트 > 숫자 3개 컬럼
 
