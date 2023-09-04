@@ -359,4 +359,16 @@ ex09_numerical_function.sql
 	시각 +- 시간
 	1. 일, 시, 분, 초 > 연산자(+,-)
 	2. 월, 년 > add_months()
+	
+	
+	
+	
+	ex26_hierarchical.sql
+	
+	SELECT
+	lpad(' ', (LEVEL - 1) * 10) || name,
+	PRIOR name 
+	FROM tblself
+	START WITH seq = 1
+		CONNECT BY super = PRIOR seq;
  	

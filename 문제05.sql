@@ -12,7 +12,11 @@ SELECT
 FROM employees ORDER BY LENGTH(fullname) desc;
 -- 2. 전체 이름(first_name + last_name)이 가장 긴 사람은 몇글자? 가장 짧은 사람은 몇글자? 평균 몇글자?
 --    > 컬럼 리스트 > 숫자 3개 컬럼
-
+SELECT
+	max(LENGTH(first_name || last_name)) AS maxlength,
+	min(LENGTH(first_name || last_name)) AS minlength,
+	round(avg(LENGTH(first_name || last_name))) AS avglength
+FROM employees;
 -- 3. last_name이 4자인 사람들의 first_name을 가져오기
 --    > 컬럼 리스트 > first_name, last_name
 --    > 정렬(first_name, 오름차순)
