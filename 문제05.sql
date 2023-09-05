@@ -38,7 +38,9 @@ SELECT
 FROM tblinsa;
 
 -- 5. tblInsa. 간부(부장, 과장) 몇명? 사원(대리, 사원) 몇명?
+SELECT
 
+FROM tblinsa;
 
 
 -- 6. tblInsa. 기획부, 영업부, 총무부, 개발부의 각각 평균 급여?
