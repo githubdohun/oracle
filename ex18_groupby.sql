@@ -59,7 +59,7 @@ SELECT
 	count(decode(gender, 'm', 1)) AS 남자수,
 	count(decode(gender, 'f', 1)) AS 여자수
 FROM tblcomedian; 
-
+SELECT * FROM tblcomedian;
 
 SELECT
 	count(*), gender

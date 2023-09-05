@@ -20,12 +20,22 @@ FROM employees;
 -- 3. last_name이 4자인 사람들의 first_name을 가져오기
 --    > 컬럼 리스트 > first_name, last_name
 --    > 정렬(first_name, 오름차순)
+SELECT
+	first_name
+FROM employees 
+	WHERE LENGTH(last_name) = 4
+		ORDER BY first_name asc;
 
 
 -- decode
 
 -- 4. tblInsa. 부장 몇명? 과장 몇명? 대리 몇명? 사원 몇명?
-
+SELECT
+	count(decode(jikwi, '부장', 1)) AS 부장수,
+	count(decode(jikwi, '과장', 1)) AS 과장수,
+	count(decode(jikwi, '대리', 1)) AS 대리수,
+	count(decode(jikwi, '사원', 1)) AS 사원수
+FROM tblinsa;
 
 -- 5. tblInsa. 간부(부장, 과장) 몇명? 사원(대리, 사원) 몇명?
 
