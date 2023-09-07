@@ -504,3 +504,175 @@ end;
 
 select * from tblloop;
 
+--2. for loop
+
+begin
+    for i in 1..10 loop
+         dbms_output.put_line(i);
+    end loop;
+end;
+
+create table tblGugudan (
+    dan number not null,
+    num number not null,
+    result number not null,
+    constraint tblGugudan_dan_num_pk primary key(dan, num)  --복합기(Composite Key)
+);
+
+drop table tblGugudan;
+
+
+create table tblGugudan (
+    dan number not null,
+    num number not null,
+    result number not null
+);
+
+alter table tblGugudan
+    add constraint tblGugudan_dan_num_pk primary key(dan, num);
+    
+begin
+    for dan in 2..9 loop
+    
+        for num in 1..9 loop
+            insert into tblGugudan (dan, num, result)
+            values (dan, num, dan * num);
+        end loop;
+        
+    end loop;
+    
+end;
+
+select * from tblgugudan;
+
+
+begin
+    for i in reverse 1..10 loop
+         dbms_output.put_line(i);
+    end loop;
+end;
+
+
+
+--3. while loop
+declare
+    vnum number := 1;
+begin
+
+    loop
+         dbms_output.put_line(vnum);
+         vnum := vnum + 1;
+         exit when vnum > 10;
+    end loop;
+end;
+
+
+declare
+    vnum number := 1;
+begin
+
+    while vnum <=10 loop
+         dbms_output.put_line(vnum);
+         vnum := vnum + 1;
+         exit when vnum > 10;
+    end loop;
+end;
+
+/*
+
+    select > 결과셋 > PL/SQL 변수 대입
+    
+    1. select into 
+        - 결과셋의 레코드가 1개일 때만 사용이 가능하다.
+        
+    2. cursor
+        - 결과셋의 레코드가 N개일 때 사용한다.
+        - 루프 사용
+        
+    declare
+        변수 선언;
+        커서 선언; -- 결과셋 참조 객체
+    begin 
+        커서 열기;
+            loop
+                데이터 접근(루프 1회전 > 레코드 1개) <- 커서 사용
+            end loop;
+        커서 닫기;
+    end;
+
+*/
+
+-- 01422. 00000 -  "exact fetch returns more than requested number of rows"
+declare
+    vname tblinsa.name%type;
+begin 
+    select name into vname from tblinsa;
+    dbms_output.put_line(vname);
+end;
+
+
+create view vview
+as
+select문;
+
+cursor vcorsor
+is 
+select문;
+
+
+
+declare
+    cursor vcursor --> 앞에가 자료형, 뒤에가 식별자
+    is 
+    select name from tblinsa;  
+    vname tblinsa.name%type;
+begin
+    open vcursor;  --> 커서 열기, select문이 실행됨. -> 결과셋을 커서가 참조함.
+--        fetch vcursor into vname;
+--        dbms_output.put_line(vname);
+--        
+--        fetch vcursor into vname;
+--        dbms_output.put_line(vname);
+--    for i in 1..60 loop
+--        fetch vcursor into vname;
+--        dbms_output.put_line(vname);
+--    end loop;    
+    
+    loop
+        fetch vcursor into vname;
+        exit when vcursor%notfound; -- bool
+        
+        dbms_output.put_line(vname);
+    end loop;
+    
+    close vcursor;
+end;
+
+
+-- '기획부' > 이름, 직위, 급여 > 출력
+declare
+    cursor vcursor
+        is select name, jikwi, basicpay from tblinsa where buseo = '기획부';
+    vname tblinsa.name%type;
+    vjikwi tblinsa.jikwi%type;
+    vbasicpay tblinsa.basicpay%type;
+    
+begin 
+    open vcursor;
+    
+    loop
+        fetch vcursor into vname, vjikwi, vbasicpay;
+        exit when vcursor%notfound;
+        
+        --업무 > 기획부 직원 한사람씩 접근..
+        dbms_output.put_line(vname || ',' || vjikwi || ',' || vbasicpay);
+        
+    end loop;
+    
+    close vcursor;
+end;
+
+-- 문제. tblBonus
+-- 모든 직원에게 보너스 지급. 60명 전원 > 과장/부장(1.5), 사원/대리(2) 지급
+select * from tblbonus;
+
