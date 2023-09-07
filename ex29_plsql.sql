@@ -676,3 +676,127 @@ end;
 -- 모든 직원에게 보너스 지급. 60명 전원 > 과장/부장(1.5), 사원/대리(2) 지급
 select * from tblbonus;
 
+declare
+ 
+    cursor vcursor
+        is select num, basicpay, jikwi from tblinsa;
+    
+    vnum tblinsa.num%type;
+    vbasicpay tblinsa.basicpay%type;
+    vjikwi tblinsa.jikwi%type;
+    vBonus number;
+    
+ 
+begin 
+    open vcursor;
+    loop
+        fetch vcursor into vnum, vbasicpay, vjikwi;
+        exit when vcursor%notfound;
+        
+        if vjikwi in ('과장', '부장') then
+            vbonus := vbasicpay * 1.5;
+        elsif vjikwi in ('사원', '대리') then
+            vbonus := vbasicpay * 2;
+        end if;
+        
+        insert into tblbonus (seq, num, bonus)
+           values ((select nvl(max(seq), 0) + 1 from tblBonus), vnum, vbonus); 
+    end loop;
+    close vcursor;
+
+ 
+end;
+
+select * from tblbonus b
+    inner join tblinsa i
+        on i.num = b.num;
+        
+-- 커서 탐색
+-- 1. 커서 + loop > 정석
+-- 2. 커서 + for loop > 간결
+
+declare
+    cursor vcursor
+    is
+    select * from tblinsa;
+    vrow tblinsa%rowtype;
+begin 
+    open vcursor;
+    loop
+        fetch vcursor into vrow;
+        exit when vcursor%notfound;
+        
+        dbms_output.put_line(vrow.name);
+        
+    end loop;
+    close vcursor;
+end;
+
+
+declare
+    cursor vcursor
+    is select * from tblinsa;
+
+begin 
+
+    for vrow in vcursor loop -- loop + fetch into + vrow + exit when
+        dbms_output.put_line(vrow.name);
+    end loop;
+end;
+
+-- 예외처리
+-- : 실행부에서(begin-end) 발생하는 예외를 처리하는 블럭 > exception 블럭
+
+declare
+    vname varchar2(5);
+begin 
+    dbms_output.put_line('하나');
+    select name into vname from tblinsa where num = 1001;
+    dbms_output.put_line('둘');
+    
+    dbms_output.put_line(vname);
+exception
+
+    when others then
+        dbms_output.put_line('예외 처리');
+
+end;
+
+-- 예외 발생 > DB 저장
+create table tblLog(
+    seq number primary key,                 -- PK
+    code varchar2(7) not null check (code in ('A001', 'B001', 'C001')), -- 에러 상태
+    message varchar2(1000) not null,        -- 에러 메세지
+    regdate date default sysdate not null   -- 에러 발생 시작
+);
+
+create sequence seqLog;
+
+declare
+    vcnt number;
+    vname tblinsa.name%type;
+begin 
+
+select count(*) into vcnt from tblcountry where name = '태국';
+dbms_output.put_line(100 / vcnt);
+
+select name into vname from tblinsa where num = 1000;
+dbms_output.put_line(vname);
+
+exception
+    
+    when zero_divide then
+        dbms_output.put_line('0으로 나누기');
+        insert into tbllog values (seqlog.nextVal, 'B001', '가져온 레코드가 없습니다.', default);
+    
+    when no_data_found then
+        dbms_output.put_line('데이터 없음');
+        insert into tbllog values (seqlog.nextVal, 'A001', '직원이 존재하지 않습니다.', default);
+    when others then
+        dbms_output.put_line('나머지 예외');
+        insert into tbllog values (seqlog.nextVal, 'C001', '기타 예외가 발생했습니다.', default);
+end;
+
+select * from tbllog;
+
+
